@@ -20,6 +20,12 @@ Or install it yourself as:
 
 ```ruby
 require "shared_count_api"
+
+SharedCountApi.configure do |config|
+  config.apikey = 'my-api-key'
+  config.url = 'my-dedicated-url'  # only use if you have a dedicated url plan
+end
+
 client = SharedCountApi::Client.new("http://slashdot.org")
 client.twitter # => 24381
 client.facebook_share_count # => 2705
