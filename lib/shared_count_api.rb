@@ -12,6 +12,26 @@ module SharedCountApi
     end
   end
 
+  class << self
+    attr_accessor :apikey, :url
+
+    # config/initializers/shared_count_api.rb (for instance)
+    #
+    # SharedCountApi.configure do |config|
+    #   config.apikey = 'my-api-key'
+    #   config.url = 'my-dedicated-url'  # only use if you have a dedicated url plan
+    # end
+    #
+    # elsewhere
+    #
+    # client = SharedCountApi::Client.new
+    def configure
+      yield self
+      true
+    end
+
+  end
+
   INVALID_URL = Error.new("invalid_url", "Not a valid URL.")
 
   class Client
@@ -20,6 +40,11 @@ module SharedCountApi
 
     def initialize(url, use_ssl = false)
       @url, @use_ssl = url, use_ssl
+      if SharedCountApi.url
+        @endpoint = SharedCountApi.url
+      else
+        @endpoint = @use_ssl ? HTTPS_ENDPOINT : HTTP_ENDPOINT
+      end
     end
 
     def stumble_upon
@@ -74,9 +99,13 @@ module SharedCountApi
 
     def response
       @response ||= begin
-        endpoint = @use_ssl ? HTTPS_ENDPOINT : HTTP_ENDPOINT
         begin
-          uri = URI("#{endpoint}?url=#{@url}")
+          uri = if SharedCountApi.apikey
+            URI("#{@endpoint}?url=#{@url}&apikey=#{SharedCountApi.apikey}")
+          else
+            URI("#{@endpoint}?url=#{@url}")
+          end
+
           res = Net::HTTP.get_response(uri)
 
           case res
