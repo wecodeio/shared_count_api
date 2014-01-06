@@ -39,7 +39,8 @@ module SharedCountApi
     HTTPS_ENDPOINT = "https://sharedcount.appspot.com/".freeze
 
     def initialize(url, use_ssl = false)
-      @url, @use_ssl = url, use_ssl
+      @url, @use_ssl = URI.escape(url), use_ssl
+
       if SharedCountApi.url
         @endpoint = SharedCountApi.url
       else
@@ -91,12 +92,6 @@ module SharedCountApi
       response["LinkedIn"]
     end
 
-  private
-
-    def facebook_metrics
-      @facebook_metrics ||= response["Facebook"].is_a?(Hash) ? response["Facebook"] : Hash.new(0)
-    end
-
     def response
       @response ||= begin
         begin
@@ -119,6 +114,12 @@ module SharedCountApi
           raise INVALID_URL
         end
       end
+    end
+
+  private
+
+    def facebook_metrics
+      @facebook_metrics ||= response["Facebook"].is_a?(Hash) ? response["Facebook"] : Hash.new(0)
     end
   end
 end

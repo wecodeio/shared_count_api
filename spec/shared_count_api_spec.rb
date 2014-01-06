@@ -113,6 +113,10 @@ describe SharedCountApi::Client do
     it "includes the number of LinkedIn shares" do
       subject.linked_in.must_equal body[:LinkedIn]
     end
+
+    it "exposes the entire response hash" do
+      subject.response.must_be_instance_of Hash
+    end
   end
 end
 
