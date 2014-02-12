@@ -63,6 +63,10 @@ module SharedCountApi
       facebook_metrics["share_count"]
     end
 
+    def facebook_comments
+      facebook_metrics["comment_count"]
+    end
+
     def delicious
       response["Delicious"]
     end
