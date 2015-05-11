@@ -35,8 +35,8 @@ module SharedCountApi
   INVALID_URL = Error.new("invalid_url", "Not a valid URL.")
 
   class Client
-    HTTP_ENDPOINT = "http://api.sharedcount.com/".freeze
-    HTTPS_ENDPOINT = "https://sharedcount.appspot.com/".freeze
+    HTTP_ENDPOINT = "http://free.sharedcount.com".freeze
+    HTTPS_ENDPOINT = "https://free.sharedcount.com".freeze
 
     def initialize(url, use_ssl = false)
       @url, @use_ssl = URI.escape(url), use_ssl
